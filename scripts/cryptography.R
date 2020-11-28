@@ -1,3 +1,4 @@
+
 # HASHING
 
 # Let's build a Simple Hashing functions from Scratch
@@ -10,7 +11,7 @@ naivehash("Hello Hashed Message 2!")
 install.packages("digest")
 library(digest)
 
-hashed.message = digest("Say hallo to a better hash!", algo="sha256")
+hashed.message = digest("Say hallo to a better hash!", algo="sha256") ## algo means algorithem
 print(paste("The SHA-256 hash is", nchar(hashed.message), "characters long"))
 print(paste("Number of possible hashes:", 16^nchar(hashed.message))) # Why? 16: The hash is in a hexadecmal format
 # Hash collision? Not likely. Check the last chart in the URL below. We are using a 64*8=
@@ -28,7 +29,7 @@ library(caesar)
 
 coded = caesar("Message to be encoded", shift=1)
 print(paste("Encoded message:", coded))
-decoded = caesar(coded, shift=1, decrypt = TRUE)
+decoded = caesar(coded, shift=1, decrypt = TRUE) ## true here is like "shift = -1"
 print(paste("Decoded message:", decoded))
 
 
@@ -37,14 +38,14 @@ print(paste("Decoded message:", decoded))
 
 # If you are using A Mac:
 # In a terminal: brew install openssl
-
+# 
 # Uncomment these lines:
-# Sys.setenv(LDFLAGS="-L/usr/local/opt/openssl@1.1/lib",
-#            CPPFLAGS="-I/usr/local/opt/openssl@1.1/include",
-#            PKG_CONFIG_PATH="/usr/local/opt/openssl@1.1/lib/pkgconfig",
-#            LIBRARY_PATH=paste(Sys.getenv("LIBRARY_PATH"),
-#                                                "/usr/local/opt/openssl@1.1/lib",
-#                                                sep=""))
+Sys.setenv(LDFLAGS="-L/usr/local/opt/openssl@1.1/lib",
+           CPPFLAGS="-I/usr/local/opt/openssl@1.1/include",
+           PKG_CONFIG_PATH="/usr/local/opt/openssl@1.1/lib/pkgconfig",
+           LIBRARY_PATH=paste(Sys.getenv("LIBRARY_PATH"),
+                                               "/usr/local/opt/openssl@1.1/lib",
+                                               sep=""))
 # 
 # If you are using Linux: Make sure openssl-dev is installed
 
@@ -52,12 +53,12 @@ install.packages('PKI')
 library(PKI)
 
 # Create a keypair and save them in PEM format to variables
-keypairprovider <- PKI.genRSAkey(bits = 2048L)
+key <- PKI.genRSAkey(bits = 2048L)
 
-prv.pem <- PKI.save.key(keypairprovider, private=TRUE)
+prv.pem <- PKI.save.key(key, private=TRUE)
 print(prv.pem)
 
-pub.pem <- PKI.save.key(keypairprovider, private=FALSE)
+pub.pem <- PKI.save.key(key, private=FALSE)
 print(pub.pem)
 
 # Extract the Public key from the public key's PEM format
@@ -95,17 +96,8 @@ print(decrypted.again)
 # 2. Generate and exchange public keys
 # 3. Send one encrypted question to your peer (both of you).
 # 4. Send an encrypted answer back to your peer and decrypt the answer. 
-# 4. SAVE IT TO DISK 
-  # HINT: You will need to read and write using binary files, like described here:
-  # https://www.tutorialspoint.com/r/r_binary_files.htm
 
-encrypted.data <- PKI.encrypt(charToRaw("Hello, asymmetric encryption, again!"), pub.key.loaded)
-write.binfile <- file("encrypted_data_file.dat", "wb")
-writeBin(encrypted.data, write.binfile)
-close(write.binfile)
+# HINT: You will need to read and write using binary files, like described here:
+# https://www.tutorialspoint.com/r/r_binary_files.htm
 
-read.binfile <- file("encrypted_data_file.dat", "rb")
-reread.encrypted.data <- readBin(read.binfile, raw(), n=999999999) # 'n' says how many bytes
-close(read.binfile)
 
-encrypted.data == reread.encrypted.data

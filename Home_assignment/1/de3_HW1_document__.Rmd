@@ -1,0 +1,62 @@
+---
+title: "DE3_HW1"
+output: pdf_document
+Student 1: Istvan Janco #2003877
+Student 2: Li Deborah Jia #2000692
+---
+## Installing Packages 
+
+```{r setup, include=true}
+knitr::opts_chunk$set(echo = TRUE)
+
+install.packages('PKI')
+library(PKI)
+
+```
+
+## Creating and Saving Public and Private Keys for CEU
+
+```{r setup, include=true}
+knitr::opts_chunk$set(echo = TRUE)
+
+key <- PKI.genRSAkey(bits = 2048L)
+
+ceu_pub.pem <- PKI.save.key(key, private=TRUE)
+write(ceu_pub.pem, file="ceu_id_rsa.pub") # Save CEU Public key
+print(ceu_pub.pem)
+
+
+ceu_prv.pem <- PKI.save.key(key, private=FALSE)
+write(ceu_prv.pem, file="ceu_id_rsa.prv")     # Save CEU Private key
+print(ceu_prv.pem)
+```
+
+
+## User Encrypts Message
+
+```{r setup, include=true}
+knitr::opts_chunk$set(echo = TRUE)
+pub_CEU.pem.loaded <- scan('ceu_id_rsa.pub', what = 'list', sep = '\n') # Load CEU public key
+pub_CEU.key.loaded <- PKI.load.key(pub_CEU.pem.loaded) # exract CEU public key
+
+user_encrypted <- PKI.encrypt(charToRaw("when was CEU established"), pub_CEU.key.loaded) # encode question
+
+write.filename = file('user_message.dat','wb')
+writeBin(user_encrypted, write.filename)
+close(write.filename)
+```
+
+## CEU Decrypting User Message Using Private Key and Pinting to Console 
+
+```{r setup, include=true}
+knitr::opts_chunk$set(echo = TRUE)
+
+read.binfile = file("user_message.dat", "rb")
+read.encrypted.data <- readBin(read.binfile, raw(), n=999999999) # 'n' says how many bytes
+close(read.binfile)
+
+decrypted <- rawToChar(PKI.decrypt(read.encrypted.data, ceu_prv.key))
+print(decrypted)
+
+```
+

@@ -1,14 +1,23 @@
 encrypt <- function(s){
+  digest(s, algo="sha256")
   # Return with the SHA256 hash value of `v`
 } 
 
 init.table <- function(){
+  df <- data.frame(user.name = character(0), password = character(0))
+  
   #' Create and return empty dataframe with these columns:
   #' user.name : character
   #' password: character
 }
 
-add.or.update.user <- function(df, user.name, password){
+new.name <- NULL
+new.password <- NULL
+add.or.update.user <- function(df, new.name, new.password){
+  row_to_find <- data.frame(user.name= new.name)
+  match_df(df, row_to_find)
+  rbind(df, user.name, password)
+  
   #' Add a new record to `df` setting the `user.name` and the `password`
   #' 
   #' If there is a record with the same username, makes sure you update the row
